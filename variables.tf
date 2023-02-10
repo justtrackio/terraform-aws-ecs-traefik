@@ -36,6 +36,12 @@ variable "ecs_cluster_arn" {
   description = "The ECS Cluster ARN where ECS Service will be provisioned"
 }
 
+variable "ecs_service_role_enabled" {
+  type        = bool
+  description = "Whether or not to create the ecs service aws_iam_role resource"
+  default     = false
+}
+
 variable "network_mode" {
   type        = string
   description = "The network mode to use for the task. This is required to be `awsvpc` for `FARGATE` `launch_type` or `null` for `EC2` `launch_type`"

@@ -148,7 +148,7 @@ module "container_definition" {
 
 module "service_task" {
   source  = "justtrackio/ecs-alb-service-task/aws"
-  version = "1.0.0"
+  version = "1.1.0"
 
   depends_on = [aws_iam_policy.default]
 
@@ -162,6 +162,7 @@ module "service_task" {
   network_mode                   = var.network_mode
   task_exec_policy_arns          = [aws_iam_policy.default.arn]
   task_policy_arns               = [aws_iam_policy.default.arn]
+  ecs_service_role_enabled       = var.ecs_service_role_enabled
 
   ecs_load_balancers = [
     {
