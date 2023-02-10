@@ -9,7 +9,7 @@ data "aws_vpc" "operations" {}
 module "traefik" {
   source            = "../../"
   name              = "traefik"
-  aws_region        = "eu-central-1"
+  aws_region        = var.aws_region
   domain            = "example.com"
   ecs_cluster_arn   = data.aws_ecs_cluster.example.arn
   initial_vpc_id    = data.aws_vpc.initial.id
