@@ -134,7 +134,8 @@ module "container_definition" {
     "--providers.ecs",
     "--providers.ecs.region=${var.aws_region}",
     "--providers.ecs.autodiscoverclusters=true",
-    "--providers.ecs.defaultrule=Host(`{{ index .Labels \"Name\"}}.{{ index .Labels \"Domain\"}}`)"
+    "--providers.ecs.exposedbydefault=false",
+    "--providers.ecs.defaultrule=Host(`{{ index .Labels \"Application\"}}.{{ index .Labels \"Domain\"}}`)"
   ]
 
   log_configuration = {
