@@ -150,8 +150,6 @@ module "service_task" {
   source  = "justtrackio/ecs-alb-service-task/aws"
   version = "1.1.0"
 
-  depends_on = [aws_iam_policy.default]
-
   container_definition_json      = local.container_definitions
   ecs_cluster_arn                = var.ecs_cluster_arn
   vpc_id                         = var.vpc_id
@@ -160,8 +158,6 @@ module "service_task" {
   wait_for_steady_state          = var.wait_for_steady_state
   subnet_ids                     = var.subnets
   network_mode                   = var.network_mode
-  task_exec_policy_arns          = [aws_iam_policy.default.arn]
-  task_policy_arns               = [aws_iam_policy.default.arn]
   ecs_service_role_enabled       = var.ecs_service_role_enabled
 
   ecs_load_balancers = [
@@ -223,6 +219,15 @@ resource "aws_iam_policy" "default" {
   tags = module.this.tags
 }
 
+resource "aws_iam_role_policy_attachment" "task" {
+  role       = module.service_task.task_role_name
+  policy_arn = aws_iam_policy.default.arn
+}
+
+resource "aws_iam_role_policy_attachment" "task_exec" {
+  role       = module.service_task.task_exec_role_name
+  policy_arn = aws_iam_policy.default.arn
+}
 
 resource "aws_route53_zone" "default" {
   name = var.domain
