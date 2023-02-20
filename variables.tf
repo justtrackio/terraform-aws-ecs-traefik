@@ -119,12 +119,13 @@ variable "initial_vpc_id" {
   description = "VPC id where the `aws_route53_zone` resource will be initially with created"
 }
 
-variable "operations_vpc_id" {
-  type        = string
-  description = "VPC id which get associated with the host-zone"
-}
-
 variable "domain" {
   type        = string
   description = "Domain for the host-zone"
+}
+
+variable "additional_vpc_id" {
+  type        = list(string)
+  description = "Additional vpc ids that should get associated with the route53 hostzone"
+  default     = null
 }

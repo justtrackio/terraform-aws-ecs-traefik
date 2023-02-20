@@ -10,26 +10,28 @@ resource "aws_route53_zone" "default" {
   }
 }
 
-resource "aws_route53_vpc_association_authorization" "networking" {
+resource "aws_route53_vpc_association_authorization" "default" {
   vpc_id  = var.vpc_id
   zone_id = aws_route53_zone.default.zone_id
 }
 
-resource "aws_route53_zone_association" "networking" {
+resource "aws_route53_zone_association" "default" {
   provider = aws.owner
-  vpc_id   = aws_route53_vpc_association_authorization.networking.vpc_id
-  zone_id  = aws_route53_vpc_association_authorization.networking.zone_id
+  vpc_id   = aws_route53_vpc_association_authorization.default.vpc_id
+  zone_id  = aws_route53_vpc_association_authorization.default.zone_id
 }
 
-resource "aws_route53_vpc_association_authorization" "operations" {
-  vpc_id  = var.operations_vpc_id
-  zone_id = aws_route53_zone.default.zone_id
+resource "aws_route53_vpc_association_authorization" "additional" {
+  for_each = toset(var.additional_vpc_id)
+  vpc_id   = each.value
+  zone_id  = aws_route53_zone.default.zone_id
 }
 
-resource "aws_route53_zone_association" "operations" {
+resource "aws_route53_zone_association" "additional" {
+  for_each = toset(var.additional_vpc_id)
   provider = aws.owner
-  vpc_id   = aws_route53_vpc_association_authorization.operations.vpc_id
-  zone_id  = aws_route53_vpc_association_authorization.operations.zone_id
+  vpc_id   = aws_route53_vpc_association_authorization.additional[each.key].vpc_id
+  zone_id  = aws_route53_vpc_association_authorization.additional[each.key].zone_id
 }
 
 resource "aws_route53_record" "default" {
