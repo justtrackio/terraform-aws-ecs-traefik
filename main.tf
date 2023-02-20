@@ -100,7 +100,7 @@ module "container_definition" {
   version = "0.58.1"
 
   container_name  = module.ecs_label.id
-  container_image = "traefik:${var.container_image_tag}"
+  container_image = "${var.container_image_url}:${var.container_image_tag}"
   port_mappings = [
     {
       containerPort = var.port_gateway

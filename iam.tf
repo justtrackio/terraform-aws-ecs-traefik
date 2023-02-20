@@ -1,3 +1,12 @@
+module "iam_label" {
+  source  = "cloudposse/label/null"
+  version = "0.25.0"
+
+  label_order = var.label_orders.iam
+
+  context = module.this.context
+}
+
 data "aws_iam_policy_document" "default" {
   statement {
     sid    = "TraefikECSReadAccess"
@@ -19,10 +28,10 @@ data "aws_iam_policy_document" "default" {
 }
 
 resource "aws_iam_policy" "default" {
-  name   = module.this.id
+  name   = module.iam_label.id
   policy = data.aws_iam_policy_document.default.json
 
-  tags = module.this.tags
+  tags = module.iam_label.tags
 }
 
 resource "aws_iam_role_policy_attachment" "task" {

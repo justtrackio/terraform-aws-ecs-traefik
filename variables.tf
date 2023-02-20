@@ -25,6 +25,12 @@ variable "load_balancer_type" {
   default     = "network"
 }
 
+variable "container_image_url" {
+  type        = string
+  description = "The image tag used to start the container. Images in the Docker Hub registry available by default"
+  default     = "traefik"
+}
+
 variable "container_image_tag" {
   type        = string
   description = "The image tag used to start the container. Images in the Docker Hub registry available by default"
