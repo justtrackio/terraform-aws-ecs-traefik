@@ -1,19 +1,10 @@
-data "aws_ecs_cluster" "example" {
-  cluster_name = "example"
-}
-
-data "aws_vpc" "initial" {}
-
-data "aws_vpc" "operations" {}
-
 module "traefik" {
-  source            = "../../"
-  name              = "traefik"
-  aws_region        = var.aws_region
-  domain            = "example.com"
-  ecs_cluster_arn   = data.aws_ecs_cluster.example.arn
-  initial_vpc_id    = data.aws_vpc.initial.id
-  operations_vpc_id = data.aws_vpc.operations.id
-  subnets           = var.subnets
-  vpc_id            = var.vpc_id
+  source          = "../../"
+  name            = "traefik"
+  aws_region      = "eu-central-1"
+  domain          = "example.com"
+  ecs_cluster_arn = "example"
+  initial_vpc_id  = "vpc-00000000000000000"
+  subnets         = ["subnet-00000000000000000"]
+  vpc_id          = "vpc-11111111111111111"
 }
