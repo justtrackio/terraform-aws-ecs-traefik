@@ -121,7 +121,7 @@ variable "initial_vpc_id" {
 
 variable "domain" {
   type        = string
-  description = "Domain for the host-zone"
+  description = "Domain for the hosted-zone"
 }
 
 variable "additional_vpc_id" {
