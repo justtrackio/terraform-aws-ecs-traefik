@@ -126,6 +126,6 @@ variable "domain" {
 
 variable "additional_vpc_id" {
   type        = list(string)
-  description = "Additional vpc ids that should get associated with the route53 hostzone"
+  description = "Additional vpc ids that should get associated with the route53 hosted-zone"
   default     = []
 }
