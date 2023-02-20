@@ -116,7 +116,7 @@ variable "port_traefik" {
 
 variable "initial_vpc_id" {
   type        = string
-  description = "VPC id where the `aws_route53_zone` resource will be initially with created"
+  description = "VPC id to be used when creating the `aws_route53_zone` resource"
 }
 
 variable "domain" {
