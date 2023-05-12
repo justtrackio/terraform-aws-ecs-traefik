@@ -79,8 +79,8 @@ module "nlb" {
 }
 
 module "ecs_label" {
-  source  = "cloudposse/label/null"
-  version = "0.25.0"
+  source  = "justtrackio/label/null"
+  version = "0.26.0"
 
   label_order = var.label_orders.ecs
 
