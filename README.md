@@ -7,14 +7,14 @@ Terraform module which creates a traefik ecs task
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.40 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.67 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.40 |
-| <a name="provider_aws.owner"></a> [aws.owner](#provider\_aws.owner) | >= 4.40 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.67 |
+| <a name="provider_aws.owner"></a> [aws.owner](#provider\_aws.owner) | >= 4.67 |
 
 ## Modules
 
