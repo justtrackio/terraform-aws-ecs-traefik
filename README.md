@@ -7,25 +7,25 @@ Terraform module which creates a traefik ecs task
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.30.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.67 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.30.0 |
-| <a name="provider_aws.owner"></a> [aws.owner](#provider\_aws.owner) | >= 4.30.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.67 |
+| <a name="provider_aws.owner"></a> [aws.owner](#provider\_aws.owner) | >= 4.67 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_container_definition"></a> [container\_definition](#module\_container\_definition) | cloudposse/ecs-container-definition/aws | 0.58.1 |
-| <a name="module_ecs_label"></a> [ecs\_label](#module\_ecs\_label) | cloudposse/label/null | 0.25.0 |
-| <a name="module_iam_label"></a> [iam\_label](#module\_iam\_label) | cloudposse/label/null | 0.25.0 |
+| <a name="module_ecs_label"></a> [ecs\_label](#module\_ecs\_label) | justtrackio/label/null | 0.26.0 |
+| <a name="module_iam_label"></a> [iam\_label](#module\_iam\_label) | justtrackio/label/null | 0.26.0 |
 | <a name="module_nlb"></a> [nlb](#module\_nlb) | terraform-aws-modules/alb/aws | 8.3.1 |
 | <a name="module_service_task"></a> [service\_task](#module\_service\_task) | justtrackio/ecs-alb-service-task/aws | 1.1.0 |
-| <a name="module_this"></a> [this](#module\_this) | cloudposse/label/null | 0.25.0 |
+| <a name="module_this"></a> [this](#module\_this) | justtrackio/label/null | 0.26.0 |
 
 ## Resources
 
@@ -50,7 +50,8 @@ Terraform module which creates a traefik ecs task
 | <a name="input_additional_tag_map"></a> [additional\_tag\_map](#input\_additional\_tag\_map) | Additional key-value pairs to add to each map in `tags_as_list_of_maps`. Not added to `tags` or `id`.<br>This is for some rare cases where resources want additional configuration of tags<br>and therefore take a list of maps with tag key, value, and additional configuration. | `map(string)` | `{}` | no |
 | <a name="input_additional_vpc_id"></a> [additional\_vpc\_id](#input\_additional\_vpc\_id) | Additional vpc ids that should get associated with the route53 hosted-zone | `list(string)` | `[]` | no |
 | <a name="input_attributes"></a> [attributes](#input\_attributes) | ID element. Additional attributes (e.g. `workers` or `cluster`) to add to `id`,<br>in the order they appear in the list. New attributes are appended to the<br>end of the list. The elements of the list are joined by the `delimiter`<br>and treated as a single ID element. | `list(string)` | `[]` | no |
-| <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | The AWS region | `string` | n/a | yes |
+| <a name="input_aws_account_id"></a> [aws\_account\_id](#input\_aws\_account\_id) | AWS account id | `string` | `null` | no |
+| <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS region | `string` | `null` | no |
 | <a name="input_cloudwatch_log_group_enabled"></a> [cloudwatch\_log\_group\_enabled](#input\_cloudwatch\_log\_group\_enabled) | A boolean to disable cloudwatch log group creation | `bool` | `true` | no |
 | <a name="input_container_image_tag"></a> [container\_image\_tag](#input\_container\_image\_tag) | The image tag used to start the container. Images in the Docker Hub registry available by default | `string` | `"v2.9.6"` | no |
 | <a name="input_container_image_url"></a> [container\_image\_url](#input\_container\_image\_url) | The image tag used to start the container. Images in the Docker Hub registry available by default | `string` | `"traefik"` | no |
@@ -77,6 +78,7 @@ Terraform module which creates a traefik ecs task
 | <a name="input_name"></a> [name](#input\_name) | ID element. Usually the component or solution name, e.g. 'app' or 'jenkins'.<br>This is the only ID element not also included as a `tag`.<br>The "name" tag is set to the full `id` string. There is no tag with the value of the `name` input. | `string` | `null` | no |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | ID element. Usually an abbreviation of your organization name, e.g. 'eg' or 'cp', to help ensure generated IDs are globally unique | `string` | `null` | no |
 | <a name="input_network_mode"></a> [network\_mode](#input\_network\_mode) | The network mode to use for the task. This is required to be `awsvpc` for `FARGATE` `launch_type` or `null` for `EC2` `launch_type` | `string` | `null` | no |
+| <a name="input_organizational_unit"></a> [organizational\_unit](#input\_organizational\_unit) | Usually used to indicate the AWS organizational unit, e.g. 'prod', 'sdlc' | `string` | `null` | no |
 | <a name="input_port_gateway"></a> [port\_gateway](#input\_port\_gateway) | Define the gateway port | `number` | `8088` | no |
 | <a name="input_port_health"></a> [port\_health](#input\_port\_health) | Define the health port | `number` | `8090` | no |
 | <a name="input_port_metadata"></a> [port\_metadata](#input\_port\_metadata) | Define the metadata port | `number` | `8070` | no |

@@ -79,8 +79,8 @@ module "nlb" {
 }
 
 module "ecs_label" {
-  source  = "cloudposse/label/null"
-  version = "0.25.0"
+  source  = "justtrackio/label/null"
+  version = "0.26.0"
 
   label_order = var.label_orders.ecs
 
@@ -132,7 +132,7 @@ module "container_definition" {
     "--ping=true",
     "--api.insecure=true",
     "--providers.ecs",
-    "--providers.ecs.region=${var.aws_region}",
+    "--providers.ecs.region=${module.this.aws_region}",
     "--providers.ecs.autodiscoverclusters=true",
     "--providers.ecs.exposedbydefault=false",
     "--providers.ecs.defaultrule=Host(`{{ index .Labels \"Application\"}}.{{ index .Labels \"Domain\"}}`)"
@@ -142,7 +142,7 @@ module "container_definition" {
     logDriver = "awslogs"
     options = {
       awslogs-group  = try(aws_cloudwatch_log_group.default[0].name, ""),
-      awslogs-region = var.aws_region
+      awslogs-region = module.this.aws_region
     }
   }
 }
