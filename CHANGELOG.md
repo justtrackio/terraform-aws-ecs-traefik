@@ -1,3 +1,10 @@
+## [1.1.0](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.0.1...v1.1.0) (2023-05-15)
+
+
+### Features
+
+* update_context_versions_variables_outputs ([#13](https://github.com/justtrackio/terraform-aws-ecs-traefik/issues/13)) ([634b4a6](https://github.com/justtrackio/terraform-aws-ecs-traefik/commit/634b4a68753dfbc57bfcee43d7f8b244e9db7127))
+
 ## [1.0.1](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.0.0...v1.0.1) (2023-05-09)
 
 
