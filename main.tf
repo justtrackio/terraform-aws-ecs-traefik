@@ -49,7 +49,12 @@ module "nlb" {
       name             = "${module.this.id}-80"
       backend_protocol = "TCP"
       backend_port     = 80
-    }
+    },
+    {
+      name             = "${module.this.id}-${var.port_grpc}"
+      backend_protocol = "TCP"
+      backend_port     = var.port_grpc
+    },
   ]
 
   http_tcp_listeners = [
@@ -72,6 +77,11 @@ module "nlb" {
       port               = 80
       protocol           = "TCP"
       target_group_index = 3
+    },
+    {
+      port               = var.port_grpc
+      protocol           = "TCP"
+      target_group_index = 4
     },
   ]
 
@@ -122,10 +132,16 @@ module "container_definition" {
       hostPort      = 0
       protocol      = "tcp"
     },
+    {
+      containerPort = var.port_grpc
+      hostPort      = 0
+      protocol      = "tcp"
+    },
   ]
 
   command = [
     "--entrypoints.gateway.address=:${var.port_gateway}/tcp",
+    "--entrypoints.grpc.address=:${var.port_grpc}/tcp",
     "--entrypoints.health.address=:${var.port_health}/tcp",
     "--entrypoints.metadata.address=:${var.port_metadata}/tcp",
     "--entrypoints.traefik.address=:${var.port_traefik}/tcp",
@@ -185,7 +201,13 @@ module "service_task" {
       container_name   = module.ecs_label.id
       elb_name         = null
       container_port   = var.port_traefik
-    }
+    },
+    {
+      target_group_arn = module.nlb.target_group_arns[4]
+      container_name   = module.ecs_label.id
+      elb_name         = null
+      container_port   = var.port_grpc
+    },
   ]
 
   label_orders = var.label_orders

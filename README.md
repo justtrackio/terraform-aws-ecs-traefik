@@ -80,6 +80,7 @@ Terraform module which creates a traefik ecs task
 | <a name="input_network_mode"></a> [network\_mode](#input\_network\_mode) | The network mode to use for the task. This is required to be `awsvpc` for `FARGATE` `launch_type` or `null` for `EC2` `launch_type` | `string` | `null` | no |
 | <a name="input_organizational_unit"></a> [organizational\_unit](#input\_organizational\_unit) | Usually used to indicate the AWS organizational unit, e.g. 'prod', 'sdlc' | `string` | `null` | no |
 | <a name="input_port_gateway"></a> [port\_gateway](#input\_port\_gateway) | Define the gateway port | `number` | `8088` | no |
+| <a name="input_port_grpc"></a> [port\_grpc](#input\_port\_grpc) | Define the grpc port | `number` | `8081` | no |
 | <a name="input_port_health"></a> [port\_health](#input\_port\_health) | Define the health port | `number` | `8090` | no |
 | <a name="input_port_metadata"></a> [port\_metadata](#input\_port\_metadata) | Define the metadata port | `number` | `8070` | no |
 | <a name="input_port_traefik"></a> [port\_traefik](#input\_port\_traefik) | Define the traefik port | `number` | `9000` | no |
