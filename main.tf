@@ -167,15 +167,35 @@ module "service_task" {
   source  = "justtrackio/ecs-alb-service-task/aws"
   version = "1.1.0"
 
-  container_definition_json      = local.container_definitions
-  ecs_cluster_arn                = var.ecs_cluster_arn
-  vpc_id                         = var.vpc_id
-  launch_type                    = var.launch_type
-  ignore_changes_task_definition = var.ignore_changes_task_definition
-  wait_for_steady_state          = var.wait_for_steady_state
-  subnet_ids                     = var.subnets
-  network_mode                   = var.network_mode
-  ecs_service_role_enabled       = var.ecs_service_role_enabled
+  container_definition_json          = local.container_definitions
+  ecs_cluster_arn                    = var.ecs_cluster_arn
+  vpc_id                             = var.vpc_id
+  launch_type                        = var.launch_type
+  ignore_changes_task_definition     = var.ignore_changes_task_definition
+  wait_for_steady_state              = var.wait_for_steady_state
+  subnet_ids                         = var.subnets
+  network_mode                       = var.network_mode
+  ecs_service_role_enabled           = var.ecs_service_role_enabled
+  deployment_minimum_healthy_percent = var.deployment_minimum_healthy_percent
+  deployment_maximum_percent         = var.deployment_maximum_percent
+  desired_count                      = var.desired_count
+  ordered_placement_strategy = [
+    {
+      type  = "spread"
+      field = "attribute:ecs.availability-zone"
+    },
+    {
+      type  = "spread"
+      field = "instanceId"
+    }
+  ]
+
+  service_placement_constraints = [
+    {
+      type       = "distinctInstance"
+      expression = null
+    }
+  ]
 
   ecs_load_balancers = [
     {

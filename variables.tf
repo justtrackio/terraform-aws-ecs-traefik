@@ -22,6 +22,24 @@ variable "container_image_url" {
   default     = "traefik"
 }
 
+variable "deployment_maximum_percent" {
+  type        = number
+  description = "The upper limit of the number of tasks (as a percentage of `desired_count`) that can be running in a service during a deployment"
+  default     = 100
+}
+
+variable "deployment_minimum_healthy_percent" {
+  type        = number
+  description = "The lower limit (as a percentage of `desired_count`) of the number of tasks that must remain running and healthy in a service during a deployment"
+  default     = 50
+}
+
+variable "desired_count" {
+  type        = number
+  description = "The number of instances of the task definition to place and keep running"
+  default     = 3
+}
+
 variable "domain" {
   type        = string
   description = "Domain for the hosted-zone"
