@@ -1,3 +1,10 @@
+## [1.2.0](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.1.0...v1.2.0) (2023-05-24)
+
+
+### Features
+
+* added grpc port ([#20](https://github.com/justtrackio/terraform-aws-ecs-traefik/issues/20)) ([e8bb742](https://github.com/justtrackio/terraform-aws-ecs-traefik/commit/e8bb742ee4bb57cafe42eec3ee2c5a6833d09019)), closes [#18](https://github.com/justtrackio/terraform-aws-ecs-traefik/issues/18)
+
 ## [1.1.0](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.0.1...v1.1.0) (2023-05-15)
 
 
