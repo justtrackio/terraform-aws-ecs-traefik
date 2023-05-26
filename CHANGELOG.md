@@ -1,3 +1,10 @@
+## [1.3.0](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.2.0...v1.3.0) (2023-05-26)
+
+
+### Features
+
+* add ha and spread it between az ([#21](https://github.com/justtrackio/terraform-aws-ecs-traefik/issues/21)) ([5fbbd58](https://github.com/justtrackio/terraform-aws-ecs-traefik/commit/5fbbd58531891ec84b5499b675815c563534c704))
+
 ## [1.2.0](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.1.0...v1.2.0) (2023-05-24)
 
 
