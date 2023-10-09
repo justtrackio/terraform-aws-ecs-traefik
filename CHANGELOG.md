@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.3.0...v1.3.1) (2023-10-09)
+
+
+### Bug Fixes
+
+* disable target group preserve_client_ip ([#32](https://github.com/justtrackio/terraform-aws-ecs-traefik/issues/32)) ([731d6a7](https://github.com/justtrackio/terraform-aws-ecs-traefik/commit/731d6a7aa2b4fbe11b4ae4e58ba439d7e2b336f8))
+
 ## [1.3.0](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.2.0...v1.3.0) (2023-05-26)
 
 
