@@ -31,29 +31,34 @@ module "nlb" {
 
   target_groups = [
     {
-      name             = "${module.this.id}-${var.port_gateway}"
-      backend_protocol = "TCP"
-      backend_port     = var.port_gateway
+      name               = "${module.this.id}-${var.port_gateway}"
+      backend_protocol   = "TCP"
+      backend_port       = var.port_gateway
+      preserve_client_ip = false
     },
     {
-      name             = "${module.this.id}-${var.port_metadata}"
-      backend_protocol = "TCP"
-      backend_port     = var.port_metadata
+      name               = "${module.this.id}-${var.port_metadata}"
+      backend_protocol   = "TCP"
+      backend_port       = var.port_metadata
+      preserve_client_ip = false
     },
     {
-      name             = "${module.this.id}-${var.port_health}"
-      backend_protocol = "TCP"
-      backend_port     = var.port_health
+      name               = "${module.this.id}-${var.port_health}"
+      backend_protocol   = "TCP"
+      backend_port       = var.port_health
+      preserve_client_ip = false
     },
     {
-      name             = "${module.this.id}-80"
-      backend_protocol = "TCP"
-      backend_port     = 80
+      name               = "${module.this.id}-80"
+      backend_protocol   = "TCP"
+      backend_port       = 80
+      preserve_client_ip = false
     },
     {
-      name             = "${module.this.id}-${var.port_grpc}"
-      backend_protocol = "TCP"
-      backend_port     = var.port_grpc
+      name               = "${module.this.id}-${var.port_grpc}"
+      backend_protocol   = "TCP"
+      backend_port       = var.port_grpc
+      preserve_client_ip = false
     },
   ]
 
