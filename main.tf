@@ -1,5 +1,10 @@
 locals {
   container_definitions = "[${module.container_definition.json_map_encoded}]"
+  health_check = {
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    protocol            = "TCP"
+  }
 }
 
 module "nlb" {
@@ -35,30 +40,38 @@ module "nlb" {
       backend_protocol   = "TCP"
       backend_port       = var.port_gateway
       preserve_client_ip = false
+      health_check       = local.health_check
     },
     {
       name               = "${module.this.id}-${var.port_metadata}"
       backend_protocol   = "TCP"
       backend_port       = var.port_metadata
       preserve_client_ip = false
+      health_check       = local.health_check
+
     },
     {
       name               = "${module.this.id}-${var.port_health}"
       backend_protocol   = "TCP"
       backend_port       = var.port_health
       preserve_client_ip = false
-    },
-    {
-      name               = "${module.this.id}-80"
-      backend_protocol   = "TCP"
-      backend_port       = 80
-      preserve_client_ip = false
+      health_check       = local.health_check
+
     },
     {
       name               = "${module.this.id}-${var.port_grpc}"
       backend_protocol   = "TCP"
       backend_port       = var.port_grpc
       preserve_client_ip = false
+      health_check       = local.health_check
+    },
+    {
+      name               = "${module.this.id}-80"
+      backend_protocol   = "TCP"
+      backend_port       = 80
+      preserve_client_ip = false
+      health_check       = local.health_check
+
     },
   ]
 
@@ -79,13 +92,17 @@ module "nlb" {
       target_group_index = 2
     },
     {
-      port               = 80
+      port               = var.port_grpc
       protocol           = "TCP"
       target_group_index = 3
     },
+  ]
+
+  https_listeners = [
     {
-      port               = var.port_grpc
-      protocol           = "TCP"
+      port               = 443
+      protocol           = "TLS"
+      certificate_arn    = var.https_listeners_certificate_arn
       target_group_index = 4
     },
   ]
@@ -142,7 +159,23 @@ module "container_definition" {
       hostPort      = 0
       protocol      = "tcp"
     },
+    {
+      containerPort = 8000
+      hostPort      = 0
+      protocol      = "tcp"
+    },
+    {
+      containerPort = 8443
+      hostPort      = 0
+      protocol      = "tcp"
+    },
   ]
+
+  docker_labels = {
+    "traefik.enable"                       = true
+    "traefik.http.routers.traefik.rule"    = "Host(`${module.this.name}.${var.domain}`)"
+    "traefik.http.routers.traefik.service" = "api@internal"
+  }
 
   command = [
     "--entrypoints.gateway.address=:${var.port_gateway}/tcp",
@@ -150,6 +183,8 @@ module "container_definition" {
     "--entrypoints.health.address=:${var.port_health}/tcp",
     "--entrypoints.metadata.address=:${var.port_metadata}/tcp",
     "--entrypoints.traefik.address=:${var.port_traefik}/tcp",
+    "--entrypoints.websecure.address=:8443/tcp",
+    "--entrypoints.web.address=:8000/tcp",
     "--ping=true",
     "--api.insecure=true",
     "--providers.ecs",
@@ -225,13 +260,13 @@ module "service_task" {
       target_group_arn = module.nlb.target_group_arns[3]
       container_name   = module.ecs_label.id
       elb_name         = null
-      container_port   = var.port_traefik
+      container_port   = var.port_grpc
     },
     {
       target_group_arn = module.nlb.target_group_arns[4]
       container_name   = module.ecs_label.id
       elb_name         = null
-      container_port   = var.port_grpc
+      container_port   = 8443
     },
   ]
 
