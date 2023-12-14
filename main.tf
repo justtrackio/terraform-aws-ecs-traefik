@@ -48,7 +48,6 @@ module "nlb" {
       backend_port       = var.port_metadata
       preserve_client_ip = false
       health_check       = local.health_check
-
     },
     {
       name               = "${module.this.id}-${var.port_health}"
@@ -56,7 +55,6 @@ module "nlb" {
       backend_port       = var.port_health
       preserve_client_ip = false
       health_check       = local.health_check
-
     },
     {
       name               = "${module.this.id}-${var.port_grpc}"
@@ -71,7 +69,6 @@ module "nlb" {
       backend_port       = 80
       preserve_client_ip = false
       health_check       = local.health_check
-
     },
   ]
 
