@@ -1,3 +1,10 @@
+## [1.4.0](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.3.1...v1.4.0) (2023-12-14)
+
+
+### Features
+
+* add new https entrypoint ([#40](https://github.com/justtrackio/terraform-aws-ecs-traefik/issues/40)) ([f42b802](https://github.com/justtrackio/terraform-aws-ecs-traefik/commit/f42b80296a321e371f19448bde06aba459ef2eb1))
+
 ## [1.3.1](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.3.0...v1.3.1) (2023-10-09)
 
 
