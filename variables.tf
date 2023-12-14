@@ -25,7 +25,7 @@ variable "container_image_url" {
 variable "deployment_maximum_percent" {
   type        = number
   description = "The upper limit of the number of tasks (as a percentage of `desired_count`) that can be running in a service during a deployment"
-  default     = 100
+  default     = 150
 }
 
 variable "deployment_minimum_healthy_percent" {
@@ -54,6 +54,12 @@ variable "ecs_service_role_enabled" {
   type        = bool
   description = "Whether or not to create the ecs service aws_iam_role resource"
   default     = false
+}
+
+variable "https_listeners_certificate_arn" {
+  type        = string
+  description = "ARN of the default SSL server certificate. Exactly one certificate is required if the protocol is HTTPS"
+  default     = null
 }
 
 variable "ignore_changes_task_definition" {
