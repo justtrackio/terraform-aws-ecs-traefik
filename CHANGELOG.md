@@ -1,3 +1,10 @@
+## [1.5.0](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.4.0...v1.5.0) (2024-02-02)
+
+
+### Features
+
+* add prometheus_metric_enable ([#42](https://github.com/justtrackio/terraform-aws-ecs-traefik/issues/42)) ([2446f2a](https://github.com/justtrackio/terraform-aws-ecs-traefik/commit/2446f2abe0463ea976d274620df99bb72b23ee15))
+
 ## [1.4.0](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.3.1...v1.4.0) (2023-12-14)
 
 
