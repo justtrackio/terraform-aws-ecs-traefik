@@ -166,6 +166,11 @@ module "container_definition" {
       hostPort      = 0
       protocol      = "tcp"
     },
+    var.enable_prometheus_metrics ? {
+      containerPort = 9100
+      hostPort      = 0
+      protocol      = "tcp"
+    } : null,
   ]
 
   docker_labels = {
@@ -188,7 +193,8 @@ module "container_definition" {
     "--providers.ecs.region=${module.this.aws_region}",
     "--providers.ecs.autodiscoverclusters=true",
     "--providers.ecs.exposedbydefault=false",
-    "--providers.ecs.defaultrule=Host(`{{ index .Labels \"Application\"}}.{{ index .Labels \"Domain\"}}`)"
+    "--providers.ecs.defaultrule=Host(`{{ index .Labels \"Application\"}}.{{ index .Labels \"Domain\"}}`)",
+    var.enable_prometheus_metrics ? "--metrics.prometheus=${var.enable_prometheus_metrics} --entryPoints.metrics.address=:9100" : null,
   ]
 
   log_configuration = {
