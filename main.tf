@@ -179,7 +179,7 @@ module "container_definition" {
     "traefik.http.routers.traefik.service" = "api@internal"
   }
 
-  command = compact(concat([
+  command = concat([
     "--entrypoints.gateway.address=:${var.port_gateway}/tcp",
     "--entrypoints.grpc.address=:${var.port_grpc}/tcp",
     "--entrypoints.health.address=:${var.port_health}/tcp",
@@ -198,9 +198,7 @@ module "container_definition" {
     "--metrics.prometheus=${var.enable_prometheus_metrics}",
     "--entryPoints.metrics.address=:9100",
     ] : []
-  ))
-
-
+  )
 
   log_configuration = {
     logDriver = "awslogs"
