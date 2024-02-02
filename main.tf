@@ -34,7 +34,7 @@ module "nlb" {
     }
   }
 
-  target_groups = [
+  target_groups = concat([
     {
       name               = "${module.this.id}-${var.port_gateway}"
       backend_protocol   = "TCP"
@@ -70,9 +70,18 @@ module "nlb" {
       preserve_client_ip = false
       health_check       = local.health_check
     },
-  ]
+    ], var.enable_prometheus_metrics ? [
+    {
+      name               = "${module.this.id}-${var.port_metrics}"
+      backend_protocol   = "TCP"
+      backend_port       = var.port_metrics
+      preserve_client_ip = false
+      health_check       = local.health_check
+    },
+    ] : []
+  )
 
-  http_tcp_listeners = [
+  http_tcp_listeners = concat([
     {
       port               = var.port_gateway
       protocol           = "TCP"
@@ -93,7 +102,14 @@ module "nlb" {
       protocol           = "TCP"
       target_group_index = 3
     },
-  ]
+    ], var.enable_prometheus_metrics ? [
+    {
+      port               = var.port_metrics
+      protocol           = "TCP"
+      target_group_index = 4
+    },
+    ] : []
+  )
 
   https_listeners = [
     {
@@ -167,7 +183,7 @@ module "container_definition" {
       protocol      = "tcp"
     },
     ], var.enable_prometheus_metrics ? [{
-      containerPort = 9100
+      containerPort = var.port_metrics
       hostPort      = 0
       protocol      = "tcp"
     }] : []
@@ -196,7 +212,7 @@ module "container_definition" {
     "--providers.ecs.defaultrule=Host(`{{ index .Labels \"Application\"}}.{{ index .Labels \"Domain\"}}`)",
     ], var.enable_prometheus_metrics ? [
     "--metrics.prometheus=${var.enable_prometheus_metrics}",
-    "--entryPoints.metrics.address=:9100",
+    "--entryPoints.metrics.address=:${var.port_metrics}",
     ] : []
   )
 

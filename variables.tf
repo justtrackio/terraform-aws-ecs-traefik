@@ -145,6 +145,12 @@ variable "port_metadata" {
   default     = 8070
 }
 
+variable "port_metrics" {
+  type        = number
+  description = "Define the prometheus metrics port"
+  default     = 9100
+}
+
 variable "port_traefik" {
   type        = number
   description = "Define the traefik port"
