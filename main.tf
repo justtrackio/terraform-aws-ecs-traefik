@@ -130,7 +130,7 @@ module "container_definition" {
 
   container_name  = module.ecs_label.id
   container_image = "${var.container_image_url}:${var.container_image_tag}"
-  port_mappings = [
+  port_mappings = concat([
     {
       containerPort = var.port_gateway
       hostPort      = 0
@@ -166,12 +166,12 @@ module "container_definition" {
       hostPort      = 0
       protocol      = "tcp"
     },
-    var.enable_prometheus_metrics ? {
+    ], var.enable_prometheus_metrics ? [{
       containerPort = 9100
       hostPort      = 0
       protocol      = "tcp"
-    } : null,
-  ]
+    }] : []
+  )
 
   docker_labels = {
     "traefik.enable"                       = true
@@ -179,7 +179,7 @@ module "container_definition" {
     "traefik.http.routers.traefik.service" = "api@internal"
   }
 
-  command = [
+  command = compact(concat([
     "--entrypoints.gateway.address=:${var.port_gateway}/tcp",
     "--entrypoints.grpc.address=:${var.port_grpc}/tcp",
     "--entrypoints.health.address=:${var.port_health}/tcp",
@@ -194,8 +194,13 @@ module "container_definition" {
     "--providers.ecs.autodiscoverclusters=true",
     "--providers.ecs.exposedbydefault=false",
     "--providers.ecs.defaultrule=Host(`{{ index .Labels \"Application\"}}.{{ index .Labels \"Domain\"}}`)",
-    var.enable_prometheus_metrics ? "--metrics.prometheus=${var.enable_prometheus_metrics} --entryPoints.metrics.address=:9100" : null,
-  ]
+    ], var.enable_prometheus_metrics ? [
+    "--metrics.prometheus=${var.enable_prometheus_metrics}",
+    "--entryPoints.metrics.address=:9100",
+    ] : []
+  ))
+
+
 
   log_configuration = {
     logDriver = "awslogs"
