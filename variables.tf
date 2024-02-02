@@ -56,6 +56,12 @@ variable "ecs_service_role_enabled" {
   default     = false
 }
 
+variable "enable_prometheus_metrics" {
+  type        = bool
+  description = "A boolean to enable/disable traefik prometheus metrics. Default is true"
+  default     = true
+}
+
 variable "https_listeners_certificate_arn" {
   type        = string
   description = "ARN of the default SSL server certificate. Exactly one certificate is required if the protocol is HTTPS"
