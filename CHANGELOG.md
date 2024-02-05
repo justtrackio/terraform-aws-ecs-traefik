@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.5.0...v1.5.1) (2024-02-05)
+
+
+### Bug Fixes
+
+* add missing metrics port to nlb ([#43](https://github.com/justtrackio/terraform-aws-ecs-traefik/issues/43)) ([5ca2b16](https://github.com/justtrackio/terraform-aws-ecs-traefik/commit/5ca2b16d230d3b4b1651cf4d1d2be345d5ee7448))
+
 ## [1.5.0](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.4.0...v1.5.0) (2024-02-02)
 
 
