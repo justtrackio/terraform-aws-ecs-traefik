@@ -56,7 +56,7 @@ variable "ecs_service_role_enabled" {
   default     = false
 }
 
-variable "enable_prometheus_metrics" {
+variable "prometheus_metrics_enabled" {
   type        = bool
   description = "A boolean to enable/disable traefik prometheus metrics. Default is true"
   default     = true

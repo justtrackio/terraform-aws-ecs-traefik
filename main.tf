@@ -70,7 +70,7 @@ module "nlb" {
       preserve_client_ip = false
       health_check       = local.health_check
     },
-    ], var.enable_prometheus_metrics ? [
+    ], var.prometheus_metrics_enabled ? [
     {
       name               = "${module.this.id}-${var.port_metrics}"
       backend_protocol   = "TCP"
@@ -102,7 +102,7 @@ module "nlb" {
       protocol           = "TCP"
       target_group_index = 3
     },
-    ], var.enable_prometheus_metrics ? [
+    ], var.prometheus_metrics_enabled ? [
     {
       port               = var.port_metrics
       protocol           = "TCP"
@@ -182,7 +182,7 @@ module "container_definition" {
       hostPort      = 0
       protocol      = "tcp"
     },
-    ], var.enable_prometheus_metrics ? [{
+    ], var.prometheus_metrics_enabled ? [{
       containerPort = var.port_metrics
       hostPort      = 0
       protocol      = "tcp"
@@ -210,8 +210,8 @@ module "container_definition" {
     "--providers.ecs.autodiscoverclusters=true",
     "--providers.ecs.exposedbydefault=false",
     "--providers.ecs.defaultrule=Host(`{{ index .Labels \"Application\"}}.{{ index .Labels \"Domain\"}}`)",
-    ], var.enable_prometheus_metrics ? [
-    "--metrics.prometheus=${var.enable_prometheus_metrics}",
+    ], var.prometheus_metrics_enabled ? [
+    "--metrics.prometheus=${var.prometheus_metrics_enabled}",
     "--entryPoints.metrics.address=:${var.port_metrics}",
     ] : []
   )
