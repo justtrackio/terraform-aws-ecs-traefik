@@ -227,7 +227,7 @@ module "container_definition" {
 
 module "service_task" {
   source  = "justtrackio/ecs-alb-service-task/aws"
-  version = "1.1.0"
+  version = "1.3.0"
 
   container_definition_json          = local.container_definitions
   ecs_cluster_arn                    = var.ecs_cluster_arn
