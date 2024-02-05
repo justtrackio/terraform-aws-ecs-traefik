@@ -56,7 +56,7 @@ variable "ecs_service_role_enabled" {
   default     = false
 }
 
-variable "enable_prometheus_metrics" {
+variable "prometheus_metrics_enabled" {
   type        = bool
   description = "A boolean to enable/disable traefik prometheus metrics. Default is true"
   default     = true
@@ -143,6 +143,12 @@ variable "port_metadata" {
   type        = number
   description = "Define the metadata port"
   default     = 8070
+}
+
+variable "port_metrics" {
+  type        = number
+  description = "Define the prometheus metrics port"
+  default     = 9100
 }
 
 variable "port_traefik" {

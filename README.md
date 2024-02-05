@@ -64,7 +64,6 @@ Terraform module which creates a traefik ecs task
 | <a name="input_domain"></a> [domain](#input\_domain) | Domain for the hosted-zone | `string` | n/a | yes |
 | <a name="input_ecs_cluster_arn"></a> [ecs\_cluster\_arn](#input\_ecs\_cluster\_arn) | The ECS Cluster ARN where ECS Service will be provisioned | `string` | n/a | yes |
 | <a name="input_ecs_service_role_enabled"></a> [ecs\_service\_role\_enabled](#input\_ecs\_service\_role\_enabled) | Whether or not to create the ecs service aws\_iam\_role resource | `bool` | `false` | no |
-| <a name="input_enable_prometheus_metrics"></a> [enable\_prometheus\_metrics](#input\_enable\_prometheus\_metrics) | A boolean to enable/disable traefik prometheus metrics. Default is true | `bool` | `true` | no |
 | <a name="input_enabled"></a> [enabled](#input\_enabled) | Set to false to prevent the module from creating any resources | `bool` | `null` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | ID element. Usually used for region e.g. 'uw2', 'us-west-2', OR role 'prod', 'staging', 'dev', 'UAT' | `string` | `null` | no |
 | <a name="input_https_listeners_certificate_arn"></a> [https\_listeners\_certificate\_arn](#input\_https\_listeners\_certificate\_arn) | ARN of the default SSL server certificate. Exactly one certificate is required if the protocol is HTTPS | `string` | `null` | no |
@@ -88,7 +87,9 @@ Terraform module which creates a traefik ecs task
 | <a name="input_port_grpc"></a> [port\_grpc](#input\_port\_grpc) | Define the grpc port | `number` | `8081` | no |
 | <a name="input_port_health"></a> [port\_health](#input\_port\_health) | Define the health port | `number` | `8090` | no |
 | <a name="input_port_metadata"></a> [port\_metadata](#input\_port\_metadata) | Define the metadata port | `number` | `8070` | no |
+| <a name="input_port_metrics"></a> [port\_metrics](#input\_port\_metrics) | Define the prometheus metrics port | `number` | `9100` | no |
 | <a name="input_port_traefik"></a> [port\_traefik](#input\_port\_traefik) | Define the traefik port | `number` | `9000` | no |
+| <a name="input_prometheus_metrics_enabled"></a> [prometheus\_metrics\_enabled](#input\_prometheus\_metrics\_enabled) | A boolean to enable/disable traefik prometheus metrics. Default is true | `bool` | `true` | no |
 | <a name="input_regex_replace_chars"></a> [regex\_replace\_chars](#input\_regex\_replace\_chars) | Terraform regular expression (regex) string.<br>Characters matching the regex will be removed from the ID elements.<br>If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits. | `string` | `null` | no |
 | <a name="input_stage"></a> [stage](#input\_stage) | ID element. Usually used to indicate role, e.g. 'prod', 'staging', 'source', 'build', 'test', 'deploy', 'release' | `string` | `null` | no |
 | <a name="input_subnets"></a> [subnets](#input\_subnets) | A list of subnets to associate with the load balancer. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f'] | `list(string)` | n/a | yes |
