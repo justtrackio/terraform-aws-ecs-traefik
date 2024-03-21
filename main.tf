@@ -196,6 +196,7 @@ module "container_definition" {
     ], var.prometheus_metrics_enabled ? [
     "--metrics.prometheus=${var.prometheus_metrics_enabled}",
     "--entryPoints.metrics.address=:${var.port_metrics}",
+    "--metrics.prometheus.entryPoint=metrics",
     ] : []
   )
 
