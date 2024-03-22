@@ -127,12 +127,6 @@ variable "port_gateway" {
   default     = 8088
 }
 
-variable "port_grpc" {
-  type        = number
-  description = "Define the grpc port"
-  default     = 8081
-}
-
 variable "port_health" {
   type        = number
   description = "Define the health port"

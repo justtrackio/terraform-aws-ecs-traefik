@@ -57,27 +57,21 @@ module "nlb" {
       health_check       = local.health_check
     },
     {
-      name               = "${module.this.id}-${var.port_grpc}"
-      backend_protocol   = "TCP"
-      backend_port       = var.port_grpc
-      preserve_client_ip = false
-      health_check       = local.health_check
-    },
-    {
       name               = "${module.this.id}-80"
       backend_protocol   = "TCP"
       backend_port       = 80
       preserve_client_ip = false
       health_check       = local.health_check
     },
-    ], var.prometheus_metrics_enabled ? [
-    {
-      name               = "${module.this.id}-${var.port_metrics}"
-      backend_protocol   = "TCP"
-      backend_port       = var.port_metrics
-      preserve_client_ip = false
-      health_check       = local.health_check
-    },
+    ],
+    var.prometheus_metrics_enabled ? [
+      {
+        name               = "${module.this.id}-${var.port_metrics}"
+        backend_protocol   = "TCP"
+        backend_port       = var.port_metrics
+        preserve_client_ip = false
+        health_check       = local.health_check
+      },
     ] : []
   )
 
@@ -97,11 +91,6 @@ module "nlb" {
       protocol           = "TCP"
       target_group_index = 2
     },
-    {
-      port               = var.port_grpc
-      protocol           = "TCP"
-      target_group_index = 3
-    },
     ], var.prometheus_metrics_enabled ? [
     {
       port               = var.port_metrics
@@ -116,7 +105,7 @@ module "nlb" {
       port               = 443
       protocol           = "TLS"
       certificate_arn    = var.https_listeners_certificate_arn
-      target_group_index = 4
+      target_group_index = 3
     },
   ]
 
@@ -168,11 +157,6 @@ module "container_definition" {
       protocol      = "tcp"
     },
     {
-      containerPort = var.port_grpc
-      hostPort      = 0
-      protocol      = "tcp"
-    },
-    {
       containerPort = 8000
       hostPort      = 0
       protocol      = "tcp"
@@ -197,7 +181,6 @@ module "container_definition" {
 
   command = concat([
     "--entrypoints.gateway.address=:${var.port_gateway}/tcp",
-    "--entrypoints.grpc.address=:${var.port_grpc}/tcp",
     "--entrypoints.health.address=:${var.port_health}/tcp",
     "--entrypoints.metadata.address=:${var.port_metadata}/tcp",
     "--entrypoints.traefik.address=:${var.port_traefik}/tcp",
@@ -213,6 +196,7 @@ module "container_definition" {
     ], var.prometheus_metrics_enabled ? [
     "--metrics.prometheus=${var.prometheus_metrics_enabled}",
     "--entryPoints.metrics.address=:${var.port_metrics}",
+    "--metrics.prometheus.entryPoint=metrics",
     ] : []
   )
 
@@ -259,7 +243,7 @@ module "service_task" {
     }
   ]
 
-  ecs_load_balancers = [
+  ecs_load_balancers = concat([
     {
       target_group_arn = module.nlb.target_group_arns[0]
       container_name   = module.ecs_label.id
@@ -282,15 +266,18 @@ module "service_task" {
       target_group_arn = module.nlb.target_group_arns[3]
       container_name   = module.ecs_label.id
       elb_name         = null
-      container_port   = var.port_grpc
-    },
-    {
-      target_group_arn = module.nlb.target_group_arns[4]
-      container_name   = module.ecs_label.id
-      elb_name         = null
       container_port   = 8443
     },
-  ]
+    ],
+    var.prometheus_metrics_enabled ? [
+      {
+        target_group_arn = module.nlb.target_group_arns[4]
+        container_name   = module.ecs_label.id
+        elb_name         = null
+        container_port   = var.port_metrics
+      },
+    ] : []
+  )
 
   label_orders = var.label_orders
   context      = module.this.context
