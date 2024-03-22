@@ -1,3 +1,10 @@
+## [1.6.0](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.5.1...v1.6.0) (2024-03-22)
+
+
+### Features
+
+* remove grpc and add metrics port ([#52](https://github.com/justtrackio/terraform-aws-ecs-traefik/issues/52)) ([e711971](https://github.com/justtrackio/terraform-aws-ecs-traefik/commit/e7119715f689d43e4474506a796035994a187c42))
+
 ## [1.5.1](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.5.0...v1.5.1) (2024-02-05)
 
 
