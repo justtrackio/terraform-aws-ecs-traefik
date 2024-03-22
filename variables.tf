@@ -4,6 +4,18 @@ variable "additional_vpc_id" {
   default     = []
 }
 
+variable "container_cpu" {
+  type        = number
+  description = "The number of cpu units to reserve for the container. This is optional for tasks using Fargate launch type and the total amount of container_cpu of all containers in a task will need to be lower than the task-level cpu value"
+  default     = 512
+}
+
+variable "container_memory" {
+  type        = number
+  description = "The amount of memory (in MiB) to allow the container to use. This is a hard limit, if the container attempts to exceed the container_memory, the container is killed. This field is optional for Fargate launch type and the total amount of container_memory of all containers in a task will need to be lower than the task memory value"
+  default     = 256
+}
+
 variable "cloudwatch_log_group_enabled" {
   type        = bool
   description = "A boolean to disable cloudwatch log group creation"
@@ -13,7 +25,7 @@ variable "cloudwatch_log_group_enabled" {
 variable "container_image_tag" {
   type        = string
   description = "The image tag used to start the container. Images in the Docker Hub registry available by default"
-  default     = "v2.9.6"
+  default     = "v2.11.0"
 }
 
 variable "container_image_url" {
@@ -154,6 +166,18 @@ variable "port_traefik" {
 variable "subnets" {
   description = "A list of subnets to associate with the load balancer. e.g. ['subnet-1a2b3c4d','subnet-1a2b3c4e','subnet-1a2b3c4f']"
   type        = list(string)
+}
+
+variable "task_cpu" {
+  type        = number
+  description = "The number of CPU units used by the task. If using `FARGATE` launch type `task_cpu` must match [supported memory values](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html#task_size)"
+  default     = 1024
+}
+
+variable "task_memory" {
+  type        = number
+  description = "The amount of memory (in MiB) used by the task. If using Fargate launch type `task_memory` must match [supported cpu value](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html#task_size)"
+  default     = 512
 }
 
 variable "vpc_id" {

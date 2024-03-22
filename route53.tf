@@ -40,8 +40,8 @@ resource "aws_route53_record" "default" {
   type    = "A"
 
   alias {
-    name                   = module.nlb.lb_dns_name
-    zone_id                = module.nlb.lb_zone_id
+    name                   = module.nlb.dns_name
+    zone_id                = module.nlb.zone_id
     evaluate_target_health = true
   }
 }
