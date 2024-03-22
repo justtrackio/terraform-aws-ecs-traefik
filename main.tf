@@ -9,105 +9,118 @@ locals {
 
 module "nlb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "8.3.1"
+  version = "9.8.0"
 
-  name               = module.this.id
-  vpc_id             = var.vpc_id
-  subnets            = var.subnets
-  internal           = var.internal
-  load_balancer_type = var.load_balancer_type
+  create_security_group = false
+  name                  = module.this.id
+  vpc_id                = var.vpc_id
+  subnets               = var.subnets
+  internal              = var.internal
+  load_balancer_type    = var.load_balancer_type
 
-  security_group_rules = {
+  security_group_ingress_rules = {
     ingress_all = {
-      type        = "ingress"
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
+      from_port   = -1
+      to_port     = -1
+      ip_protocol = "-1"
+      cidr_ipv4   = "0.0.0.0/0"
     }
+  }
+  security_group_egress_rules = {
     egress_all = {
-      type        = "egress"
-      from_port   = 0
-      to_port     = 0
-      protocol    = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
+      from_port   = -1
+      to_port     = -1
+      ip_protocol = "-1"
+      cidr_ipv4   = "0.0.0.0/0"
     }
   }
 
   target_groups = concat([
     {
+      create_attachment  = false
       name               = "${module.this.id}-${var.port_gateway}"
-      backend_protocol   = "TCP"
-      backend_port       = var.port_gateway
+      protocol           = "TCP"
+      port               = var.port_gateway
       preserve_client_ip = false
       health_check       = local.health_check
     },
     {
+      create_attachment  = false
       name               = "${module.this.id}-${var.port_metadata}"
-      backend_protocol   = "TCP"
-      backend_port       = var.port_metadata
+      protocol           = "TCP"
+      port               = var.port_metadata
       preserve_client_ip = false
       health_check       = local.health_check
     },
     {
+      create_attachment  = false
       name               = "${module.this.id}-${var.port_health}"
-      backend_protocol   = "TCP"
-      backend_port       = var.port_health
+      protocol           = "TCP"
+      port               = var.port_health
       preserve_client_ip = false
       health_check       = local.health_check
     },
     {
+      create_attachment  = false
       name               = "${module.this.id}-80"
-      backend_protocol   = "TCP"
-      backend_port       = 80
+      protocol           = "TCP"
+      port               = 80
       preserve_client_ip = false
       health_check       = local.health_check
     },
     ],
     var.prometheus_metrics_enabled ? [
       {
+        create_attachment  = false
         name               = "${module.this.id}-${var.port_metrics}"
-        backend_protocol   = "TCP"
-        backend_port       = var.port_metrics
+        protocol           = "TCP"
+        port               = var.port_metrics
         preserve_client_ip = false
         health_check       = local.health_check
       },
     ] : []
   )
 
-  http_tcp_listeners = concat([
+  listeners = concat([
     {
-      port               = var.port_gateway
-      protocol           = "TCP"
-      target_group_index = 0
+      forward = {
+        target_group_key = 0
+      }
+      port     = var.port_gateway
+      protocol = "TCP"
     },
     {
-      port               = var.port_metadata
-      protocol           = "TCP"
-      target_group_index = 1
+      forward = {
+        target_group_key = 1
+      }
+      port     = var.port_metadata
+      protocol = "TCP"
     },
     {
-      port               = var.port_health
-      protocol           = "TCP"
-      target_group_index = 2
+      forward = {
+        target_group_key = 2
+      }
+      port     = var.port_health
+      protocol = "TCP"
+    },
+    {
+      forward = {
+        target_group_key = 3
+      }
+      port            = 443
+      protocol        = "TLS"
+      certificate_arn = var.https_listeners_certificate_arn
     },
     ], var.prometheus_metrics_enabled ? [
     {
-      port               = var.port_metrics
-      protocol           = "TCP"
-      target_group_index = 4
+      forward = {
+        target_group_key = 4
+      }
+      port     = var.port_metrics
+      protocol = "TCP"
     },
     ] : []
   )
-
-  https_listeners = [
-    {
-      port               = 443
-      protocol           = "TLS"
-      certificate_arn    = var.https_listeners_certificate_arn
-      target_group_index = 3
-    },
-  ]
 
   tags = module.this.tags
 }
@@ -131,10 +144,12 @@ resource "aws_cloudwatch_log_group" "default" {
 
 module "container_definition" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "0.58.1"
+  version = "0.61.1"
 
-  container_name  = module.ecs_label.id
-  container_image = "${var.container_image_url}:${var.container_image_tag}"
+  container_name   = module.ecs_label.id
+  container_image  = "${var.container_image_url}:${var.container_image_tag}"
+  container_cpu    = var.container_cpu
+  container_memory = var.container_memory
   port_mappings = concat([
     {
       containerPort = var.port_gateway
@@ -211,7 +226,7 @@ module "container_definition" {
 
 module "service_task" {
   source  = "justtrackio/ecs-alb-service-task/aws"
-  version = "1.1.0"
+  version = "1.3.0"
 
   container_definition_json          = local.container_definitions
   ecs_cluster_arn                    = var.ecs_cluster_arn
@@ -243,27 +258,30 @@ module "service_task" {
     }
   ]
 
+  task_cpu    = var.task_cpu
+  task_memory = var.task_memory
+
   ecs_load_balancers = concat([
     {
-      target_group_arn = module.nlb.target_group_arns[0]
+      target_group_arn = module.nlb.target_groups[0].arn
       container_name   = module.ecs_label.id
       elb_name         = null
       container_port   = var.port_gateway
     },
     {
-      target_group_arn = module.nlb.target_group_arns[1]
+      target_group_arn = module.nlb.target_groups[1].arn
       container_name   = module.ecs_label.id
       elb_name         = null
       container_port   = var.port_metadata
     },
     {
-      target_group_arn = module.nlb.target_group_arns[2]
+      target_group_arn = module.nlb.target_groups[2].arn
       container_name   = module.ecs_label.id
       elb_name         = null
       container_port   = var.port_health
     },
     {
-      target_group_arn = module.nlb.target_group_arns[3]
+      target_group_arn = module.nlb.target_groups[3].arn
       container_name   = module.ecs_label.id
       elb_name         = null
       container_port   = 8443
@@ -271,7 +289,7 @@ module "service_task" {
     ],
     var.prometheus_metrics_enabled ? [
       {
-        target_group_arn = module.nlb.target_group_arns[4]
+        target_group_arn = module.nlb.target_groups[4].arn
         container_name   = module.ecs_label.id
         elb_name         = null
         container_port   = var.port_metrics
