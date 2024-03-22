@@ -131,7 +131,7 @@ resource "aws_cloudwatch_log_group" "default" {
 
 module "container_definition" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "0.58.1"
+  version = "0.61.1"
 
   container_name  = module.ecs_label.id
   container_image = "${var.container_image_url}:${var.container_image_tag}"
