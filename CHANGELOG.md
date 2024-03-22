@@ -1,3 +1,10 @@
+## [1.7.0](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.6.0...v1.7.0) (2024-03-22)
+
+
+### Features
+
+* exposed container_cpu/container_memory/task_cpu/task_memory var… ([#50](https://github.com/justtrackio/terraform-aws-ecs-traefik/issues/50)) ([e74063c](https://github.com/justtrackio/terraform-aws-ecs-traefik/commit/e74063cff9ddb766a8d5028597beff77add12e11))
+
 ## [1.6.0](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.5.1...v1.6.0) (2024-03-22)
 
 
