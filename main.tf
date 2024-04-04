@@ -11,12 +11,13 @@ module "nlb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "9.8.0"
 
-  create_security_group = false
-  name                  = module.this.id
-  vpc_id                = var.vpc_id
-  subnets               = var.subnets
-  internal              = var.internal
-  load_balancer_type    = var.load_balancer_type
+  create_security_group            = false
+  name                             = module.this.id
+  vpc_id                           = var.vpc_id
+  subnets                          = var.subnets
+  internal                         = var.internal
+  load_balancer_type               = var.load_balancer_type
+  dns_record_client_routing_policy = var.dns_record_client_routing_policy
 
   security_group_ingress_rules = {
     ingress_all = {
@@ -103,22 +104,36 @@ module "nlb" {
       port     = var.port_health
       protocol = "TCP"
     },
-    {
-      forward = {
-        target_group_key = 3
-      }
-      port            = 443
-      protocol        = "TLS"
-      certificate_arn = var.https_listeners_certificate_arn
-    },
-    ], var.prometheus_metrics_enabled ? [
-    {
-      forward = {
-        target_group_key = 4
-      }
-      port     = var.port_metrics
-      protocol = "TCP"
-    },
+    ],
+    var.https_listeners_certificate_arn != null ?
+    [
+      {
+        forward = {
+          target_group_key = 3
+        }
+        port            = 443
+        protocol        = "TLS"
+        certificate_arn = var.https_listeners_certificate_arn
+      },
+      ] : [
+      {
+        forward = {
+          target_group_key = 3
+        }
+        port            = 80
+        protocol        = "TCP"
+        certificate_arn = null
+      },
+    ],
+    var.prometheus_metrics_enabled ?
+    [
+      {
+        forward = {
+          target_group_key = 4
+        }
+        port     = var.port_metrics
+        protocol = "TCP"
+      },
     ] : []
   )
 
@@ -167,25 +182,27 @@ module "container_definition" {
       protocol      = "tcp"
     },
     {
-      containerPort = var.port_traefik
-      hostPort      = 0
-      protocol      = "tcp"
-    },
-    {
       containerPort = 8000
       hostPort      = 0
       protocol      = "tcp"
     },
-    {
-      containerPort = 8443
-      hostPort      = 0
-      protocol      = "tcp"
-    },
-    ], var.prometheus_metrics_enabled ? [{
-      containerPort = var.port_metrics
-      hostPort      = 0
-      protocol      = "tcp"
-    }] : []
+    ],
+    var.https_listeners_certificate_arn != null ?
+    [
+      {
+        containerPort = 8443
+        hostPort      = 0
+        protocol      = "tcp"
+      }
+    ] : [],
+    var.prometheus_metrics_enabled ?
+    [
+      {
+        containerPort = var.port_metrics
+        hostPort      = 0
+        protocol      = "tcp"
+      }
+    ] : []
   )
 
   docker_labels = {
@@ -198,21 +215,20 @@ module "container_definition" {
     "--entrypoints.gateway.address=:${var.port_gateway}/tcp",
     "--entrypoints.health.address=:${var.port_health}/tcp",
     "--entrypoints.metadata.address=:${var.port_metadata}/tcp",
-    "--entrypoints.traefik.address=:${var.port_traefik}/tcp",
-    "--entrypoints.websecure.address=:8443/tcp",
     "--entrypoints.web.address=:8000/tcp",
     "--ping=true",
     "--api.insecure=true",
     "--providers.ecs",
     "--providers.ecs.region=${module.this.aws_region}",
-    "--providers.ecs.autodiscoverclusters=true",
+    "--providers.ecs.clusters=${split("/", var.ecs_cluster_arn)[1]}",
     "--providers.ecs.exposedbydefault=false",
     "--providers.ecs.defaultrule=Host(`{{ index .Labels \"Application\"}}.{{ index .Labels \"Domain\"}}`)",
     ], var.prometheus_metrics_enabled ? [
     "--metrics.prometheus=${var.prometheus_metrics_enabled}",
     "--entryPoints.metrics.address=:${var.port_metrics}",
     "--metrics.prometheus.entryPoint=metrics",
-    ] : []
+    ] : [],
+    var.https_listeners_certificate_arn != null ? ["--entrypoints.websecure.address=:8443/tcp"] : []
   )
 
   log_configuration = {
@@ -284,7 +300,7 @@ module "service_task" {
       target_group_arn = module.nlb.target_groups[3].arn
       container_name   = module.ecs_label.id
       elb_name         = null
-      container_port   = 8443
+      container_port   = var.https_listeners_certificate_arn != null ? 8443 : 8000
     },
     ],
     var.prometheus_metrics_enabled ? [

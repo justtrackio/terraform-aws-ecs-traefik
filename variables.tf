@@ -4,22 +4,16 @@ variable "additional_vpc_id" {
   default     = []
 }
 
-variable "container_cpu" {
-  type        = number
-  description = "The number of cpu units to reserve for the container. This is optional for tasks using Fargate launch type and the total amount of container_cpu of all containers in a task will need to be lower than the task-level cpu value"
-  default     = 512
-}
-
-variable "container_memory" {
-  type        = number
-  description = "The amount of memory (in MiB) to allow the container to use. This is a hard limit, if the container attempts to exceed the container_memory, the container is killed. This field is optional for Fargate launch type and the total amount of container_memory of all containers in a task will need to be lower than the task memory value"
-  default     = 256
-}
-
 variable "cloudwatch_log_group_enabled" {
   type        = bool
   description = "A boolean to disable cloudwatch log group creation"
   default     = true
+}
+
+variable "container_cpu" {
+  type        = number
+  description = "The number of cpu units to reserve for the container. This is optional for tasks using Fargate launch type and the total amount of container_cpu of all containers in a task will need to be lower than the task-level cpu value"
+  default     = 512
 }
 
 variable "container_image_tag" {
@@ -32,6 +26,12 @@ variable "container_image_url" {
   type        = string
   description = "The image tag used to start the container. Images in the Docker Hub registry available by default"
   default     = "traefik"
+}
+
+variable "container_memory" {
+  type        = number
+  description = "The amount of memory (in MiB) to allow the container to use. This is a hard limit, if the container attempts to exceed the container_memory, the container is killed. This field is optional for Fargate launch type and the total amount of container_memory of all containers in a task will need to be lower than the task memory value"
+  default     = 256
 }
 
 variable "deployment_maximum_percent" {
@@ -52,6 +52,12 @@ variable "desired_count" {
   default     = 3
 }
 
+variable "dns_record_client_routing_policy" {
+  description = "Indicates how traffic is distributed among the load balancer Availability Zones. Possible values are any_availability_zone, availability_zone_affinity (default), or partial_availability_zone_affinity. Only valid for network type load balancers."
+  type        = string
+  default     = "availability_zone_affinity"
+}
+
 variable "domain" {
   type        = string
   description = "Domain for the hosted-zone"
@@ -66,12 +72,6 @@ variable "ecs_service_role_enabled" {
   type        = bool
   description = "Whether or not to create the ecs service aws_iam_role resource"
   default     = false
-}
-
-variable "prometheus_metrics_enabled" {
-  type        = bool
-  description = "A boolean to enable/disable traefik prometheus metrics. Default is true"
-  default     = true
 }
 
 variable "https_listeners_certificate_arn" {
@@ -157,10 +157,10 @@ variable "port_metrics" {
   default     = 9100
 }
 
-variable "port_traefik" {
-  type        = number
-  description = "Define the traefik port"
-  default     = 9000
+variable "prometheus_metrics_enabled" {
+  type        = bool
+  description = "A boolean to enable/disable traefik prometheus metrics. Default is true"
+  default     = true
 }
 
 variable "subnets" {
