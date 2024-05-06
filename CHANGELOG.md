@@ -1,3 +1,10 @@
+## [1.8.0](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.7.0...v1.8.0) (2024-05-06)
+
+
+### Features
+
+* added ability to disable https listener and replace with http l… ([#54](https://github.com/justtrackio/terraform-aws-ecs-traefik/issues/54)) ([8d089cf](https://github.com/justtrackio/terraform-aws-ecs-traefik/commit/8d089cf884dbd5c452437acfefc2fff55a14577f))
+
 ## [1.7.0](https://github.com/justtrackio/terraform-aws-ecs-traefik/compare/v1.6.0...v1.7.0) (2024-03-22)
 
 
