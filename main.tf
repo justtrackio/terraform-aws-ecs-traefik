@@ -9,7 +9,7 @@ locals {
 
 module "nlb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "9.8.0"
+  version = "9.10.0"
 
   create_security_group            = false
   name                             = module.this.id
