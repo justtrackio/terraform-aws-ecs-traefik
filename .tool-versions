@@ -1,4 +1,4 @@
-terraform 1.10.1
+terraform 1.11.2
 terraform-docs 0.19.0
-tflint 0.54.0
-pre-commit 4.0.1
+tflint 0.55.1
+pre-commit 4.2.0
